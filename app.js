@@ -1,7 +1,7 @@
 // In src/index.js
 const express = require("express");
 // *** ADD ***
-const v1Router = require("./v1/routes");
+const v1Router = require("./src/v1/routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
