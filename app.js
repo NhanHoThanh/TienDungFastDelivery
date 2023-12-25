@@ -5,7 +5,7 @@ const v1Router = require("./src/v1/routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-// *** ADD ***
+
 app.use("/api/v1", v1Router);
 
 app.listen(PORT, () => {
