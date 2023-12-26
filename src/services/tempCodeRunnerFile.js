@@ -1,0 +1,1 @@
+updateUserInfo("user1", "firstname", "fromservice");
