@@ -1,5 +1,5 @@
 const express = require("express");
-const updateUser = require("../database/Database");
+const { updateUser, updatePassword } = require("../database/Database");
 
 const updateUserInfo = (name, infoType, newInfo) => {
   return new Promise((resolve, reject) => {
@@ -15,6 +15,18 @@ const updateUserInfo = (name, infoType, newInfo) => {
   });
 };
 
-//updateUserInfo("user1", "firstname", "fromservice");
+const updateUserPassword = (username, oldPassword, newPassword) => {
+  return new Promise((resolve, reject) => {
+    updatePassword(username, oldPassword, newPassword, (err, results) => {
+      if (err) {
+        console.error("Error updating user password: ", err);
+        reject(err);
+      } else {
+        console.log("User password updated: ", results);
+        resolve(results);
+      }
+    });
+  });
+};
 
-module.exports = { updateUserInfo };
+module.exports = { updateUserInfo, updateUserPassword };

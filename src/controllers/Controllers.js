@@ -1,5 +1,5 @@
 const session = require("express-session");
-const { updateUserInfo } = require("../services/Service");
+const { updateUserInfo, updateUserPassword } = require("../services/Service");
 
 const checkSession = (req, res) => {
   if (req.session.User) {
@@ -10,8 +10,12 @@ const checkSession = (req, res) => {
 };
 
 const setSession = (req, res) => {
+  const { authorization, phone_number } = req.body;
+
   req.session.User = {
-    username: "user1",
+    // username: "user1",
+    authorization: authorization,
+    phoneNumber: phone_number,
   };
 
   req.session.save((err) => {
@@ -42,19 +46,49 @@ const destroySession = (req, res) => {
     });
   }
 };
+
 const updateUser = (req, res) => {
-  checkSession(req, res);
-  const infoType = req.query.update;
-  const { username: name, newInfo: newInfo } = req.body;
-  if (!name || !infoType || !newInfo) {
-    return res.status(400).json({ error: "Missing required parameters" });
+  //this need to be put in ultils
+  if (!req.session.User) {
+    return res.status(200).send("No session");
   }
-  try {
-    updateUserInfo(name, infoType, newInfo);
-    return res.status(200).send("User info has been updated");
-  } catch (err) {
-    console.log("Error: ", err);
-    return res.status(500).send("Failed to update user info");
+
+  const infoType = req.query.update;
+  if (!infoType) {
+    return;
+  }
+
+  const infoTypes = infoType.split("+"); // Array type
+
+  if (infoType != "password") {
+    const { username: name, newInfo: newInfo } = req.body;
+    if (!name || !infoType || !newInfo) {
+      return res.status(400).json({ error: "Missing required parameters" });
+    }
+    try {
+      updateUserInfo(name, infoType, newInfo);
+      return res.status(200).send("User info has been updated");
+    } catch (err) {
+      console.log("Error: ", err);
+      return res.status(500).send("Failed to update user info");
+    }
+  }
+  if (infoType == "password") {
+    const {
+      username: name,
+      old_password: oldPassword,
+      new_password: newPassword,
+    } = req.body;
+    if (!name || !oldPassword || !newPassword) {
+      return res.status(400).json({ error: "Missing required parameters" });
+    }
+    try {
+      updateUserPassword(name, oldPassword, newPassword);
+      return res.status(200).send("User password has been updated");
+    } catch (err) {
+      console.log("Error: ", err);
+      return res.status(500).send("Failed to update user password");
+    }
   }
 };
 

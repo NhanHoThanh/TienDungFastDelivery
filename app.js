@@ -57,8 +57,8 @@ app.use(
 
 // cleanUpExpiredSession.start();
 
-app.use("/", userRoute);
-
+app.use("/api/v1/users", userRoute);
+// api/v1/users/check_session
 app.use(function (req, res, next) {
   next(createError(404));
 });

@@ -1,11 +1,7 @@
 const session = require("express-session");
 
-const checkSession = (req, res) => {
-  if (req.session.user) {
-    res.send("Session is valid");
-  } else {
-    res.send("Session is not valid");
-  }
+const is_session = (req, res) => {
+  return req.session.User.username;
 };
 
 const setSession = (req, res) => {
@@ -13,13 +9,10 @@ const setSession = (req, res) => {
     name: "John Doe",
     age: 20,
   };
-
-  return res.status(200).json({ status: "success" });
 };
 
 const countSession = (req, res) => {
   const count = Object.keys(req.sessionStore.sessions).length;
-  return res.status(200).json({ count: count });
 };
 
 const destroySession = (req, res) => {
