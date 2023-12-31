@@ -204,17 +204,23 @@ const updateUserInfo = async (req, res) => {
           });
         }
       } else if (key === "avatar") {
-        usersService.updateImage(
-          req.file.path,
-          req.body[key],
-          (err, message) => {
-            if (err) {
-              console.error(err.message);
-              return res.status(500).send("không cập nhật được avatar");
-            }
-            res.send(message);
-          }
-        );
+        /*
+        có thể dùng req.file.name thay vì req.body.phone_number
+        vì update avatar khác với các kiểu update khác, nên sẽ return ngay khi update xong, tránh hàm updateUserInfo thực hiện tiếp
+         */
+        try {
+          await usersService.updateImage(req.body.phone_number);
+          return res.status(200).json({
+            error: false,
+            message: "Cập nhật thành công!",
+          });
+        } catch (err) {
+          console.error(err.message);
+          return res.status(400).json({
+            error: true,
+            message: "Không cập nhật được avatar.",
+          });
+        }
       }
     }
   }

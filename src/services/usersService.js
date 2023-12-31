@@ -26,25 +26,9 @@ const updateUserInfo = async (
 ) => {
   await Users.updateUserInfo(fields, values, conditionFields, conditionValues);
 };
-const updateImage = (newImagePath, username, callback) => {
-  const oldImagePath = path.join(
-    __dirname,
-    `../../public/images/${username}.jpg`
-  );
-
-  fs.unlink(oldImagePath, (err) => {
-    if (err) {
-      return callback({ message: "Lỗi không xóa avatar cũ" });
-    }
-
-    fs.rename(newImagePath, oldImagePath, (err) => {
-      if (err) {
-        return callback({ message: "Lỗi không cập nhật đc tên avatar" });
-      }
-
-      callback(null, "Cập nhật avatar thành công");
-    });
-  });
+const updateImage = async (phone_number) => {
+  await Users.updateAvatar(phone_number);
+  return "Avatar updated successfully";
 };
 module.exports = {
   checkExistUser,
